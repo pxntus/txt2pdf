@@ -1,0 +1,39 @@
+{#
+    This is a Jinja2 template for the output LaTeX file.
+#}
+{% if multiple_chapters %}
+% sffms (Typesetting science fiction/fantasy manuscripts) looks good for novels
+\documentclass[a4paper,12pt,nonsubmission,smart]{sffms}
+{% else: %}
+% book document class looks good for short stories
+\documentclass[a4paper,12pt,openany]{book}
+{% endif %}
+{% if language %}
+\usepackage[{{ language }}]{babel}
+{% endif %}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+{% if wide_line_spacing %}
+\linespread{1.5}
+{% endif %}
+{% if title %}
+\title{ {{ title }} }
+{% endif %}
+{% if author %}
+\author{ {{ author }} }
+{% endif %}
+{% if title and author %}
+\date{}
+{% endif %}
+\begin{document}
+
+{% for chapter in chapters %}
+\chapter*{ {{ chapter.title }} }
+{{ chapter.content }}
+
+{% endfor %}
+
+{% if not multiple_chapters %}
+\thirty{}
+{% endif %}
+\end{document}
