@@ -8,6 +8,8 @@ The goal is to keep the text files as clean as possible with a minimum of struct
 Most people writing fiction and literature use Word, Pages, Scrivener or some other WYSIWYG editor.
 However, there are many reasons to use a plain text editor, e.g. better text editing, less distraction of text formatting and productivity features such as full screen and zen modes (as found in [Visual Studio Code](https://code.visualstudio.com/) and [Sublime Text](https://www.sublimetext.com/)).
 
+One drawback, though, is the difficulties in producing a good looking, formatted and typeset document (to be sent to publishers). This is the problem that txt2pdf tries to solve.
+
 ## Prerequisites
 
 * Python 3
@@ -69,7 +71,6 @@ TheGreatNovel
     │
     └───txt2pdf
         │   ...
-
 ```
 
 A recommendation is to create a directory (called _build_ in the example above) with a batch or bash script that creates the PDF document. If you have a big writing project with lots of chapters or short stories (i.e. text files) the list of command arguments can be quite long. You don't want to type it every time...
