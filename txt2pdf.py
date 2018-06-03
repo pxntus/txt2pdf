@@ -231,7 +231,7 @@ if __name__ == '__main__':
         print("Something bad happened during LaTeX execution!\n")
         if e.completed_process.stderr is not None:
             print(e.completed_process.stderr)
-        print("Copying generated text file and log file for debugging...\n")
+        print("Copying generated tex file and log file for debugging...\n")
         shutil.copy(os.path.join(temp_dir, args.output + ".log"), "./")
         shutil.copy(os.path.join(temp_dir, args.output + ".tex"), "./")
         shutil.rmtree(temp_dir)
