@@ -119,6 +119,12 @@ Minus characters in the text are converted to dashes when appropriate.
 
 A very small subset of Markdown syntax is supported (i.e. only what I, the author of txt2pdf, so far have needed...).
 
+Emphasis, aka italics, are marked using underscores:
+
+```text
+You don't know anything, dear. _I killed the captain!_, said the butler.
+```
+
 Quotes can be written like this to get a nice format in the output:
 
 ```text

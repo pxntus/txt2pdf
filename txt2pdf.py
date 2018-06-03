@@ -39,6 +39,9 @@ class ErrorWhenExecutingLatexException(Exception):
             return self.completed_process.stderr
 
 
+TEX_ITALIC_PRE_STR = r"\emph{"
+TEX_ITALIC_POST_STR = r"}"
+
 def convert_simplified_markdown_to_latex(content):
 
     # Pre-process text to make it properly LaTeX formatted
@@ -48,6 +51,22 @@ def convert_simplified_markdown_to_latex(content):
     content = content.replace('#', r'\#')           # proper '#' character
     content = re.sub(r'\[\[.*?\]\]', '', content)   # Remove text between [[ ... ]] delimiters
     content = re.sub(r"\n- ", r"\n-- ", content)    # replace dash at the beginning of line
+
+    # Convert text between underscores to emphasized formatting.
+    emphasized_text_state = False
+    pos = content.find('_')
+    while (pos >= 0):
+        if emphasized_text_state:
+            content = content[0:pos] + TEX_ITALIC_POST_STR + content[pos+1:]
+            pos += len(TEX_ITALIC_POST_STR) - 1  # minus one for underscore
+            emphasized_text_state = False
+        else:
+            content = content[0:pos] + TEX_ITALIC_PRE_STR + content[pos+1:]
+            pos += len(TEX_ITALIC_PRE_STR) - 1  # minus one for underscore
+            emphasized_text_state = True
+        pos = content.find('_')
+    if emphasized_text_state:
+        print("Warning: Unfinished emphasized text marker!", file=sys.stderr)
 
     paragraphs = content.splitlines()
     title = paragraphs[0]
@@ -212,6 +231,10 @@ if __name__ == '__main__':
         print("Something bad happened during LaTeX execution!\n")
         if e.completed_process.stderr is not None:
             print(e.completed_process.stderr)
+        print("Copying generated text file and log file for debugging...\n")
+        shutil.copy(os.path.join(temp_dir, args.output + ".log"), "./")
+        shutil.copy(os.path.join(temp_dir, args.output + ".tex"), "./")
+        shutil.rmtree(temp_dir)
         sys.exit(1)
 
     #except:
