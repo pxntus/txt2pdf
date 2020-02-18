@@ -15,7 +15,7 @@ One drawback, though, is the difficulties in producing a good looking, formatted
 * Python 3
   * jinja2
   * langdetect
-* [MikTex](https://miktex.org/)
+* [MikTex](https://miktex.org/) \[Windows] or `texlive` packet \[Debian or Ubuntu Linux]
 
 ## Installation
 
@@ -23,13 +23,25 @@ One drawback, though, is the difficulties in producing a good looking, formatted
 
 2. Create an isolated Python environment using **virtualenv** or just use the system installation and make sure the required packages are installed using the **requirement.txt** file.
 
-        python -m pip install -r requirement.txt
+   On Windows:
+
+       py -3 -m pip install -r requirement.txt
+
+   On Linux:
+
+       python3 -m pip install -r requirement.txt
 
 3. Run the following command to read more about the command line arguments:
 
-        python txt2pdf.py --help
+   On Windows:
 
-When running the script for the first time (with real and valid inputs) MikTex will install multiple LaTeX packages. You should accept this.
+       py -3 txt2pdf.py --help
+
+   On Linux:
+
+       python3 txt2pdf.py --help
+
+On Windows: When running the script for the first time (with real and valid inputs) MikTex will install multiple LaTeX packages. You should accept this.
 
 ## Example
 
