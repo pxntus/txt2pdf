@@ -1,7 +1,7 @@
 {#
     This is a Jinja2 template for the output LaTeX file.
 #}
-{% if multiple_chapters %}
+{% if is_windows and multiple_chapters %}
 % sffms (Typesetting science fiction/fantasy manuscripts) looks good for novels
 \documentclass[a4paper,12pt,nonsubmission,smart]{sffms}
 {% else: %}
@@ -33,7 +33,4 @@
 
 {% endfor %}
 
-{% if not multiple_chapters %}
-\thirty{}
-{% endif %}
 \end{document}

@@ -123,6 +123,7 @@ def preprocess_input(args):
     metadata['multiple_chapters'] = len(args.sources) > 1
     metadata['wide_line_spacing'] = args.wide_line_spacing
     metadata['chapters'] = []
+    metadata['is_windows'] = (os.name == 'nt')
 
     lang_detect_input = None
 
@@ -164,14 +165,19 @@ def preprocess_input(args):
 
 
 def find_latex_binary():
-    # Only supports Windows for now. This should be the only code that needs to be fixed to support Linux.
-    for filename in glob.iglob("c:/Program Files/**/pdflatex.exe", recursive=True):
-        return filename
-    for filename in glob.iglob("c:/Program Files (x86)/**/pdflatex.exe", recursive=True):
-        return filename
-    home = os.path.expanduser("~")
-    for filename in glob.iglob(home + "/**/pdflatex.exe", recursive=True):
-        return filename
+    if os.name == "posix":
+        if os.path.isfile("/usr/bin/pdflatex"):
+            return "pdflatex"
+        return None
+    elif os.name == "nt":
+        for filename in glob.iglob("c:/Program Files/**/pdflatex.exe", recursive=True):
+            return filename
+        for filename in glob.iglob("c:/Program Files (x86)/**/pdflatex.exe", recursive=True):
+            return filename
+        home = os.path.expanduser("~")
+        for filename in glob.iglob(home + "/**/pdflatex.exe", recursive=True):
+            return filename
+        return None
     return None
 
 
@@ -184,7 +190,10 @@ def generate_latex_source(metadata, tex_path):
 
 
 def generate_pdf_output(latex_bin, tex_path, temp_dir):
-    result = subprocess.run([latex_bin, tex_path, "-quiet", "-halt-on-error", "-output-directory", temp_dir], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    if os.name == 'nt':
+        result = subprocess.run([latex_bin, tex_path, "-quiet", "-halt-on-error", "-output-directory", temp_dir], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    else:
+        result = subprocess.run([latex_bin, tex_path, "-halt-on-error", "-output-directory={}".format(temp_dir)], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     if result.returncode != 0:
         raise ErrorWhenExecutingLatexException(result)
 
@@ -218,7 +227,7 @@ if __name__ == '__main__':
         generate_latex_source(metadata, tex_path)
         print("Generating PDF '{}'...".format(output_filename))
         generate_pdf_output(latex_bin, tex_path, temp_dir)
-        shutil.copy(pdf_path, "./")
+        #shutil.copy(pdf_path, "./")
 
         print("Cleaning up intermediate files...")
         shutil.rmtree(temp_dir)
