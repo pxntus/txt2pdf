@@ -136,7 +136,7 @@ def preprocess_input(args):
     for path in args.sources:
         path = os.path.join(basepath, path)
         try:
-            with open(path, 'rU') as f:
+            with open(path, 'r') as f:
                 content = f.read()
         except IOError:
             raise InvalidInputTxtFileException(path)
